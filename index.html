@@ -368,9 +368,59 @@
             from { transform: scale(0.6); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
+
+        /* Kontener na przyciski w rogu ekranu */
+.corner-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.corner-button {
+    background: #3498db;
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,.35);
+    transition: .2s;
+    margin-top: 0;
+}
+
+.corner-button.gwent {
+    background: #27ae60;
+}
+
+.corner-button.gwent:hover {
+    background: #219150;
+}
+
+.corner-button:hover {
+    transform: scale(1.05);
+    background: #2980b9;
+}
     </style>
 </head>
 <body>
+
+    <div class="corner-container">
+    <button
+    class="corner-button"
+    onclick="window.location.href='https://czopokoarty2.netlify.app/';">
+    🏠 CZOPOKARTY
+    </button>
+    <button
+    class="corner-button gwent"
+    onclick="window.location.href='https://czopotycoon.netlify.app/';">
+    ⚔️ TYCOON
+    </button>
+</div>
 
     <!-- 1. EKRAN LOBBY -->
     <div id="screen-lobby" class="screen active">
