@@ -22,7 +22,7 @@
         .screen { display: none; width: 1050px; min-height: 750px; background: #221a14; border: 4px solid #5c4428; border-radius: 8px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); position: relative; }
         .screen.active { display: flex; flex-direction: column; }
 
-        /* NAGŁÓWKI I WALUTA - POPRAWIONE POPRZEZ USUNIĘCIE PADDING-RIGHT */
+        /* NAGŁÓWKI I WALUTA */
         .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #423221; padding-bottom: 10px; margin-bottom: 15px; }
         .gold-display { font-size: 20px; color: #f3d179; font-weight: bold; background: #14100d; padding: 6px 15px; border-radius: 20px; border: 1px solid #f3d179; }
 
@@ -34,7 +34,7 @@
         .btn-back { position: absolute; bottom: 20px; left: 20px; }
 
         /* SKLEP STYLE */
-        .shop-container { display: flex; justify-content: space-around; gap: 15px; margin-top: 20px; }
+        .shop-container { display: flex; justify-around: space-around; gap: 15px; margin-top: 20px; }
         .chest-card { background: #18130f; border: 2px solid #5c4428; border-radius: 8px; padding: 15px; width: 30%; text-align: center; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
         .chest-card.gold-chest { border-color: #f3d179; background: #241d10; box-shadow: 0 0 15px rgba(243, 209, 121, 0.2); }
         .chest-icon { font-size: 60px; margin: 10px 0; }
@@ -78,24 +78,6 @@
         .card.locked:hover { transform: none; border-color: #3d3124; box-shadow: none; }
         .card.enemy { border-color: #7a3838; cursor: default; }
         .card.decoy-target { border-color: #58e5e5; box-shadow: 0 0 12px #58e5e5; animation: pulse 1s infinite; }
-
-        .card-power-badge {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid #f3d179;
-            color: #f3d179;
-            font-weight: bold;
-            font-size: 12px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-        }
 
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -146,21 +128,28 @@
         .row-horn {
             width: 60px;
             height: 85px;
-            background: rgba(243, 209, 121, 0.15);
-            border: 2px dashed #f3d179;
+            background: rgba(243, 209, 121, 0.08);
+            border: 2px dashed #5c4428;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: #f3d179;
+            color: #5c4428;
             margin-right: 5px;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            background-size: cover;
+            background-position: center;
         }
         .row-horn.active {
             border-style: solid;
-            background: rgba(243, 209, 121, 0.3);
-            box-shadow: 0 0 10px rgba(243, 209, 121, 0.5);
+            border-color: #f3d179;
+            color: transparent;
+            background-image: url('Grafiki/Rog.jpg');
+            box-shadow: 0 0 12px rgba(243, 209, 121, 0.6);
+            cursor: pointer;
         }
 
         .row-label { position: absolute; right: 10px; font-size: 11px; color: #5c4428; font-weight: bold; text-transform: uppercase; pointer-events: none; }
@@ -851,7 +840,6 @@ function startCampaignLevel(lvl) {
     }
 }
 
-// Dialogi Orka Maciasa
 function showOrkDialogModal(type) {
     const modal = document.getElementById('ork-dialog-modal');
     const textEl = document.getElementById('ork-speech-text');
@@ -914,7 +902,7 @@ const LEGEND_DEFINITIONS = [
     { cardIds: ['mo16'], title: '4. Czop Kennedy & Mocny Kaliber', tag: '(Eliminacja Mocnych)', desc: 'Po zagraniu automatycznie odnajduje i niszczy najsilniejszą kartę przeciwnika z dowolnego rzędu, pod warunkiem że jej moc wynosi <strong>maksymalnie 6</strong>.' },
     { cardIds: ['nr16'], title: '5. Marcin Stark', tag: '(Podwójna Eliminacja)', desc: 'Po postawieniu na planszy natychmiastowo usuwa <strong>2 najsłabsze karty</strong> przeciwnika z dowolnego rzędu.' },
     { cardIds: ['nr5', 'nr10', 'mo5'], title: '6. Szpiedzy (Ada Wong, Czarny Wdowiec, Dziadoki)', tag: '(Szpieg / Dobranie)', desc: 'Trafiają na stronę przeciwnika (zwiększając jego wynik), ale natychmiast pozwalają graczowi dociągnąć <strong>2 dodatkowe karty</strong> z własnej talii.' },
-    { cardIds: ['mo15'], title: '7. Tępiciele & Silna Wola', tag: '(Ciągłość / Złota Karta)', desc: 'Złota karta, elastyczna w wyborze rzędu. Przebywając na planszy pod koniec 1. rundy, pozostaje na kolejną rundę. W 3. rundzie zostaje ostatecznie usunięta.' },
+    { cardIds: ['mo15'], title: '7. Tępiciele & Silna Wola', tag: '(Ciągłość / Złota Karta)', desc: 'Złota karta, elastyczna w wyborze rzędu. Postawiona na planszę w dowolnej rundzie, przechodzi na kolejną rundę. Po jej zakończeniu trafia na cmentarz.' },
     { cardIds: ['sp_scorch'], title: '8. Pożoga', tag: '(Zagłada)', desc: 'Niszczy najsilniejszą kartę (lub karty w przypadku remisów) na całej planszy, pomijając karty Złote.' },
     { cardIds: ['sp_decoy'], title: '9. Manekin', tag: '(Podmiana)', desc: 'Pozwala na wycofanie z własnej planszy z powrotem do ręki dowolnej karty zwykłej (nie-złotej).' },
     { cardIds: ['nr8', 'nr15', 'nr17', 'mo15'], title: '10. Elastyczność Rzędów', tag: '(Główny Sztab)', desc: 'Karty z tą zdolnością mogą być zagrywane zarówno do <strong>1. rzędu (Walka)</strong>, jak i <strong>2. rzędu (Dystans)</strong> wedle uznania gracza.' }
@@ -1136,44 +1124,53 @@ function shuffleArray(arr) {
 }
 
 function generateBalancedAIDeck(faction) {
+    let rawDeck = [];
+
     if (currentCampaignLevelMatch !== null) {
         let campaignCardsIds = CAMPAIGN_AI_DECKS[currentCampaignLevelMatch] || CAMPAIGN_AI_DECKS[1];
-        let campaignDeck = campaignCardsIds.map(id => ({ ...ALL_CARDS_MAP[id], idUnique: Math.random() }));
-        return shuffleArray(campaignDeck);
-    }
-
-    let availableForAI = ALL_CARDS[faction].filter(c => playerProfile.unlockedCards.includes(c.id));
-    if (availableForAI.length === 0) {
-        availableForAI = ALL_CARDS[faction].slice(0, 10);
-    }
-
-    let weightedPool = [];
-    availableForAI.forEach(card => {
-        let weight = Math.max(1, card.power);
-        if (card.isGold) weight += 5;
-        if (card.effect) weight += 3;
-
-        for (let i = 0; i < weight; i++) {
-            weightedPool.push(card);
-        }
-    });
-
-    let selectedDeck = [];
-    let usedIds = new Set();
-
-    while (weightedPool.length > 0 && selectedDeck.length < Math.min(availableForAI.length, 15)) {
-        let randomIndex = Math.floor(Math.random() * weightedPool.length);
-        let pickedCard = weightedPool[randomIndex];
-
-        if (!usedIds.has(pickedCard.id)) {
-            usedIds.add(pickedCard.id);
-            selectedDeck.push({ ...pickedCard, idUnique: Math.random() });
+        rawDeck = campaignCardsIds.map(id => ({ ...ALL_CARDS_MAP[id] }));
+    } else {
+        let availableForAI = ALL_CARDS[faction].filter(c => playerProfile.unlockedCards.includes(c.id));
+        if (availableForAI.length === 0) {
+            availableForAI = ALL_CARDS[faction].slice(0, 10);
         }
 
-        weightedPool = weightedPool.filter(c => c.id !== pickedCard.id);
+        let weightedPool = [];
+        availableForAI.forEach(card => {
+            let weight = Math.max(1, card.power);
+            if (card.isGold) weight += 5;
+            if (card.effect) weight += 3;
+
+            for (let i = 0; i < weight; i++) {
+                weightedPool.push(card);
+            }
+        });
+
+        let usedIds = new Set();
+        while (weightedPool.length > 0 && rawDeck.length < Math.min(availableForAI.length, 15)) {
+            let randomIndex = Math.floor(Math.random() * weightedPool.length);
+            let pickedCard = weightedPool[randomIndex];
+
+            if (!usedIds.has(pickedCard.id)) {
+                usedIds.add(pickedCard.id);
+                rawDeck.push({ ...pickedCard });
+            }
+
+            weightedPool = weightedPool.filter(c => c.id !== pickedCard.id);
+        }
     }
 
-    return shuffleArray(selectedDeck);
+    // Filtrowanie ręki: max 2-3 karty specjalne (pogoda, pożoga, manekin, wzmocnienie)
+    let shuffled = shuffleArray(rawDeck);
+    let units = shuffled.filter(c => c.type !== 'special' && c.type !== 'weather');
+    let specials = shuffled.filter(c => c.type === 'special' || c.type === 'weather');
+
+    let allowedSpecialsCount = Math.floor(Math.random() * 2) + 2; // 2 lub 3 karty
+    let chosenSpecials = specials.slice(0, allowedSpecialsCount);
+    let chosenUnits = units;
+
+    let finalDeck = [...chosenUnits, ...chosenSpecials].map(c => ({ ...c, idUnique: Math.random() }));
+    return shuffleArray(finalDeck);
 }
 
 function initiatePreMatch(aiFactionChoice = 'RANDOM') {
@@ -1282,7 +1279,7 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
     }
     document.getElementById('ai-faction-label').innerText = aiLabel;
 
-    let fullAIDeck = generateBalancedAIDeck(aiFaction);
+    let fullAIDeck = generateBalancedAIDeck(aiFaction === 'ORK_MACIAS' ? 'MO' : aiFaction);
     let aiHand = fullAIDeck.slice(0, 10);
     let aiDeckRemaining = fullAIDeck.slice(10);
 
@@ -1291,6 +1288,7 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
 
     gameState = {
         player: { 
+            faction: pFaction,
             hand: finalHand, 
             deck: remainingDeck,
             board: { melee: [], range: [], siege: [] },
@@ -1299,6 +1297,7 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
             passed: false 
         },
         ai: { 
+            faction: aiFaction,
             hand: aiHand, 
             deck: aiDeckRemaining,
             board: { melee: [], range: [], siege: [] },
@@ -1362,11 +1361,19 @@ function updateUI() {
 
     ['melee', 'range', 'siege'].forEach(type => {
         let pRow = document.getElementById(`player-${type}`);
-        pRow.innerHTML = `<div class="row-horn ${gameState.player.horns[type] ? 'active' : ''}" id="player-${type}-horn">🎺</div><span class="row-label">${type === 'melee' ? 'Walka' : type === 'range' ? 'Dystans' : 'Artyleria'}</span>`;
+        let pHornActive = gameState.player.horns[type];
+        
+        let pHornHtml = `<div class="row-horn ${pHornActive ? 'active' : ''}" id="player-${type}-horn" ${pHornActive ? 'onclick="event.stopPropagation(); showCardPreview(ALL_CARDS_MAP[\'sp_horn\'])"' : ''}>${pHornActive ? '' : '🎺'}</div>`;
+        pRow.innerHTML = `${pHornHtml}<span class="row-label">${type === 'melee' ? 'Walka' : type === 'range' ? 'Dystans' : 'Artyleria'}</span>`;
+        
         gameState.player.board[type].forEach((c, cIdx) => pRow.appendChild(renderBoardCard(c, false, type, cIdx)));
 
         let aiRow = document.getElementById(`ai-${type}`);
-        aiRow.innerHTML = `<div class="row-horn ${gameState.ai.horns[type] ? 'active' : ''}" id="ai-${type}-horn">🎺</div><span class="row-label">${type === 'melee' ? 'Walka' : type === 'range' ? 'Dystans' : 'Artyleria'}</span>`;
+        let aiHornActive = gameState.ai.horns[type];
+        
+        let aiHornHtml = `<div class="row-horn ${aiHornActive ? 'active' : ''}" id="ai-${type}-horn" ${aiHornActive ? 'onclick="event.stopPropagation(); showCardPreview(ALL_CARDS_MAP[\'sp_horn\'])"' : ''}>${aiHornActive ? '' : '🎺'}</div>`;
+        aiRow.innerHTML = `${aiHornHtml}<span class="row-label">${type === 'melee' ? 'Walka' : type === 'range' ? 'Dystans' : 'Artyleria'}</span>`;
+        
         gameState.ai.board[type].forEach((c, cIdx) => aiRow.appendChild(renderBoardCard(c, true, type, cIdx)));
 
         document.getElementById(`player-${type}-score`).innerText = calcRowScore('player', type);
@@ -1564,6 +1571,7 @@ function playCard(pType, idx, row) {
     let p = gameState[pType];
     let card = p.hand.splice(idx, 1)[0];
     if (row && p.board[row]) {
+        card.playedInRound = gameState.currentRound;
         p.board[row].push(card);
     }
     return card;
@@ -1573,6 +1581,7 @@ function playSpyCard(pType, idx) {
     let opponentType = pType === 'player' ? 'ai' : 'player';
     let p = gameState[pType];
     let card = p.hand.splice(idx, 1)[0];
+    card.playedInRound = gameState.currentRound;
 
     let targetRow = card.type;
     if (gameState.disabledRow === targetRow) {
@@ -1638,6 +1647,7 @@ function executeOnPlayEffects(pType, card) {
             }
 
             if (pobinCard && gameState.disabledRow !== 'melee') {
+                pobinCard.playedInRound = gameState.currentRound;
                 gameState[pType].board.melee.push(pobinCard);
                 if (pType === 'player') setStatus("Fatbat wezwał kartę Pobin na planszę!");
             }
@@ -1827,9 +1837,6 @@ function applyWeatherEffect(effect) {
     }
 }
 
-// ==========================================
-// POPRAWIONA LOGIKA PASOWANIA I INTELIGENCJI AI
-// ==========================================
 function aiTurn() {
     if (gameState.gameOver || gameState.ai.passed) return;
 
@@ -1843,44 +1850,47 @@ function aiTurn() {
     const aiWins = gameState.ai.wins;
     const playerWins = gameState.player.wins;
     const round = gameState.currentRound;
-    const scoreDiff = aiScore - playerScore; // Dodatnie = AI wygrywa, Ujemne = AI przegrywa
+    const scoreDiff = aiScore - playerScore;
     const cardsInHand = gameState.ai.hand.length;
-    const playerCardsInHand = gameState.player.hand.length;
 
-    // --- SPRAWDZENIE PASU GRACZA ---
-    // Jeśli gracz spasował, AI wystarczy wygrywać przynajmniej 1 punktem (aiScore > playerScore)
+    // Decydująca runda (ostatnia runda meczu lub gdy wygrana da zwycięstwo)
+    const isDecisiveRound = (aiWins === gameState.winsRequired - 1 && playerWins === gameState.winsRequired - 1) || 
+                           (round >= gameState.winsRequired * 2 - 1) ||
+                           (playerWins === gameState.winsRequired - 1 && aiWins < gameState.winsRequired - 1);
+
     if (gameState.player.passed) {
+        // Jeśli AI wygrywa, opłaca się spasować
         if (aiScore > playerScore) {
             passRound('ai');
             return;
         }
-    }
-
-    // --- RUNDA 1 ---
-    if (round === 1) {
-        // Pasuje w momencie dużej przewagi (15+ pkt) lub dużej straty (-15+ pkt) gdy gracz jeszcze gra
-        if (!gameState.player.passed && (scoreDiff >= 15 || scoreDiff <= -15)) {
-            passRound('ai');
-            return;
+        // W decydującej rundzie NIE pasuj gdy przegrywasz lub remisujesz - wygraj za wszelką cenę!
+        if (isDecisiveRound) {
+            // Kontynuuj grę
         }
-    }
-
-    // --- RUNDA 2 ---
-    if (round === 2) {
-        if (aiWins > playerWins) {
-            // AI wygrało 1. rundę. Cel: zagrać od 0 do 4 kart i oszczędzać siły na rundę 3.
-            if (!gameState.player.passed) {
-                if (cardsInHand <= 4 || gameState.ai.cardsPlayedThisRound >= 4) {
-                    passRound('ai');
-                    return;
-                }
-                if (aiScore > playerScore && gameState.ai.cardsPlayedThisRound >= 1) {
+    } else {
+        // Pasowanie taktyczne w 1 lub 2 rundzie (TYLKO gdy runda NIE jest decydująca)
+        if (!isDecisiveRound) {
+            if (round === 1) {
+                if (scoreDiff >= 15 || scoreDiff <= -15) {
                     passRound('ai');
                     return;
                 }
             }
+
+            if (round === 2) {
+                if (aiWins > playerWins) {
+                    if (cardsInHand <= 4 || gameState.ai.cardsPlayedThisRound >= 4) {
+                        passRound('ai');
+                        return;
+                    }
+                    if (aiScore > playerScore && gameState.ai.cardsPlayedThisRound >= 1) {
+                        passRound('ai');
+                        return;
+                    }
+                }
+            }
         }
-        // Jeśli playerWins > aiWins (gracz wygrał R1), AI gra dopóki nie wygra R2 (obsłużone przez spadek do grana kart)
     }
 
     aiPlayBestCard();
@@ -1890,7 +1900,15 @@ function aiPlayBestCard() {
     let hand = gameState.ai.hand;
     let chosenIndex = -1;
 
-    // 1. Zagraj szpiega z ręki (jeśli rząd docelowy nie jest zablokowany)
+    const aiWins = gameState.ai.wins;
+    const playerWins = gameState.player.wins;
+    const round = gameState.currentRound;
+
+    const isLastRound = (aiWins === gameState.winsRequired - 1 && playerWins === gameState.winsRequired - 1) || 
+                         (currentCampaignLevelMatch === 5 && round >= 4) || 
+                         (currentCampaignLevelMatch !== 5 && round >= 3);
+
+    // 1. Zagraj Szpiega jeśli możliwy
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].isSpy && hand[i].type !== gameState.disabledRow) {
             playSpyCard('ai', i);
@@ -1899,7 +1917,7 @@ function aiPlayBestCard() {
         }
     }
 
-    // 2. Manekin
+    // 2. Manekin (gdy warto cofnąć własną kartę/szpiega)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'decoy') {
             let bestTarget = findBestDecoyTarget('ai');
@@ -1926,7 +1944,7 @@ function aiPlayBestCard() {
         }
     }
 
-    // 3. Wzmocnienie (Róg Dowódcy)
+    // 3. Wzmocnienie (Róg)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'horn') {
             let bestRow = null;
@@ -1934,8 +1952,11 @@ function aiPlayBestCard() {
 
             ['melee', 'range', 'siege'].forEach(r => {
                 if (!gameState.ai.horns[r] && gameState.disabledRow !== r) {
-                    let rScore = calcRowScore('ai', r);
-                    if (rScore > maxBaseScore && rScore >= 6) {
+                    let rScore = gameState.ai.board[r].reduce((sum, c) => {
+                        return !c.isGold ? sum + getCardPower(c, r, 'ai') : sum;
+                    }, 0);
+
+                    if (rScore > maxBaseScore && rScore >= 4) {
                         maxBaseScore = rScore;
                         bestRow = r;
                     }
@@ -1954,11 +1975,13 @@ function aiPlayBestCard() {
         }
     }
 
-    // 4. Pożoga
+    // 4. Bezpieczna Pożoga (używa TYLKO gdy nie niszczy własnych lub niszczy więcej u gracza)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'scorch') {
             let playerMax = getMaxNonGoldPower('player');
             let aiMax = getMaxNonGoldPower('ai');
+            
+            // Jeśli gracz ma najwyższą moc i wynosi ona min. 6 pkt, a AI nie traci swojej najwyższej karty
             if (playerMax > aiMax && playerMax >= 6) {
                 chosenIndex = i;
                 break;
@@ -1966,7 +1989,7 @@ function aiPlayBestCard() {
         }
     }
 
-    // 5. Karty pogody
+    // 5. Bezpieczna Pogoda (zagrywa tylko wtedy, gdy gracz straci więcej niż AI)
     if (chosenIndex === -1) {
         for (let i = 0; i < hand.length; i++) {
             let card = hand[i];
@@ -1984,10 +2007,11 @@ function aiPlayBestCard() {
                 } else {
                     let targetRow = card.effect === 'frost' ? 'melee' : (card.effect === 'fog' ? 'range' : 'siege');
                     if (!gameState.weather[targetRow] && targetRow !== gameState.disabledRow) {
-                        let playerRowScore = calcRowScore('player', targetRow);
-                        let aiRowScore = calcRowScore('ai', targetRow);
-                        
-                        if (playerRowScore - aiRowScore >= 8) {
+                        let playerLoss = calcPotentialWeatherLoss('player', targetRow);
+                        let aiLoss = calcPotentialWeatherLoss('ai', targetRow);
+
+                        // AI zagra pogodę tylko jeśli gracz straci wyraźnie więcej punktów niż AI
+                        if (playerLoss > aiLoss && playerLoss >= 5) {
                             chosenIndex = i;
                             break;
                         }
@@ -1997,13 +2021,12 @@ function aiPlayBestCard() {
         }
     }
 
-    // 6. Zwykłe jednostki – FILTRACJA WYKLUCZONEGO RZĘDU
+    // 6. Wybór standardowej jednostki
     if (chosenIndex === -1) {
         let unitIndices = [];
         for (let i = 0; i < hand.length; i++) {
             let card = hand[i];
             if (card.type !== 'weather' && card.type !== 'special') {
-                // Pozwalaj na zagranie karty TYLKO gdy jej rząd nie jest wykluczony LUB gdy jest elastyczna
                 let isAllowed = false;
                 if (card.isAgile) {
                     isAllowed = (gameState.disabledRow !== 'melee' || gameState.disabledRow !== 'range');
@@ -2015,35 +2038,69 @@ function aiPlayBestCard() {
             }
         }
 
-        // Jeśli AI ma same karty przypisane do zablokowanego rzędu -> Pasuje
+        // Świadomość AI dotycząca Tępicieli (efekt resilience marnuje się w ostatniej rundzie):
+        // W rundzie nie-ostatniej zachęcamy do zagrania Tępicieli (podwyższamy ocenę priorytetu).
+        // W ostatniej rundzie odkładamy Tępicieli na koniec (chyba że są potrzebni do przebicia punktowego).
+        if (unitIndices.length > 1) {
+            unitIndices.sort((a, b) => {
+                let cardA = hand[a];
+                let cardB = hand[b];
+
+                let scoreA = cardA.power;
+                let scoreB = cardB.power;
+
+                if (cardA.effect === 'resilience') {
+                    scoreA += isLastRound ? -5 : 6;
+                }
+                if (cardB.effect === 'resilience') {
+                    scoreB += isLastRound ? -5 : 6;
+                }
+
+                return scoreA - scoreB;
+            });
+        }
+
+        // Jeśli z braku wyboru zostały same niedopasowane specjały / pogody w ostatniej rundzie, użyj najmniej szkodliwej z nich
         if (unitIndices.length === 0) {
-            passRound('ai');
-            return;
-        }
-
-        const aiScore = calcScore('ai');
-        const playerScore = calcScore('player');
-
-        unitIndices.sort((a, b) => hand[a].power - hand[b].power);
-
-        if (gameState.player.passed && playerScore >= aiScore) {
-            let neededPoints = (playerScore - aiScore) + 1;
-            let winningCardIndex = unitIndices.find(idx => hand[idx].power >= neededPoints);
-            
-            if (winningCardIndex !== undefined) {
-                chosenIndex = winningCardIndex;
-            } else {
-                chosenIndex = unitIndices[unitIndices.length - 1];
+            for (let i = 0; i < hand.length; i++) {
+                if (hand[i].effect !== 'scorch') { // unika samobójczej pożogi
+                    chosenIndex = i;
+                    break;
+                }
             }
-        } else if (aiScore > playerScore) {
-            chosenIndex = unitIndices[0];
+            if (chosenIndex === -1 && hand.length > 0) chosenIndex = 0;
         } else {
-            if (playerScore - aiScore > 10) {
-                chosenIndex = unitIndices[unitIndices.length - 1];
-            } else {
+            const aiScore = calcScore('ai');
+            const playerScore = calcScore('player');
+
+            if (gameState.player.passed && playerScore >= aiScore) {
+                let neededPoints = (playerScore - aiScore) + 1;
+                let winningCardIndex = unitIndices.find(idx => hand[idx].power >= neededPoints);
+                
+                if (winningCardIndex !== undefined) {
+                    chosenIndex = winningCardIndex;
+                } else {
+                    chosenIndex = unitIndices[unitIndices.length - 1];
+                }
+            } else if (aiScore > playerScore) {
                 chosenIndex = unitIndices[0];
+            } else {
+                if (playerScore - aiScore > 10) {
+                    chosenIndex = unitIndices[unitIndices.length - 1];
+                } else {
+                    chosenIndex = unitIndices[0];
+                }
             }
         }
+    }
+
+    if (chosenIndex === -1 && hand.length > 0) {
+        chosenIndex = 0;
+    }
+
+    if (chosenIndex === -1) {
+        passRound('ai');
+        return;
     }
 
     let cardToPlay = hand[chosenIndex];
@@ -2099,12 +2156,9 @@ function findBestDecoyTarget(pType) {
     ['melee', 'range', 'siege'].forEach(rowType => {
         gameState[pType].board[rowType].forEach((card, index) => {
             if (!card.isGold && card.effect !== 'decoy' && card.type !== 'special') {
-                // 1. Priorytet: Szpieg zagrany przez gracza (AI chce go przejąć!)
                 if (card.isSpy) {
                     best = { rowType, index, isSpy: true };
-                }
-                // 2. Jeśli brak szpiega, szukaj najsilniejszej jednostki zwykłej
-                else if (!best || !best.isSpy) {
+                } else if (!best || !best.isSpy) {
                     if (card.power > maxPower && card.power >= 6) {
                         maxPower = card.power;
                         best = { rowType, index, isSpy: false };
@@ -2126,6 +2180,19 @@ function calcWeatherLoss(pType) {
                     loss += (c.power - 1);
                 }
             });
+        }
+    });
+    return loss;
+}
+
+function calcPotentialWeatherLoss(pType, rowType) {
+    let loss = 0;
+    gameState[pType].board[rowType].forEach(c => {
+        if (!c.isGold && c.type !== 'special') {
+            let currentPwr = getCardPower(c, rowType, pType);
+            if (currentPwr > 1) {
+                loss += (currentPwr - 1);
+            }
         }
     });
     return loss;
@@ -2153,7 +2220,7 @@ function showCardPreview(card) {
     else if (card.effect === 'gowieno') effectDesc = '★ Szpieg: odejmuje 1 pkt mocy każdej karcie w 1 rzędzie wroga.';
     else if (card.effect === 'stark') effectDesc = '★ Mocny kaliber: Niszczy najsilniejszą kartę wroga o mocy max 6.';
     else if (card.effect === 'stark_double_weak') effectDesc = '★ Podwójny cios: Niszczy 2 najsłabsze karty wroga z dowolnego rzędu.';
-    else if (card.effect === 'resilience') effectDesc = '★ Silna Wola: Zostaje na planszy do następnej rundy (usuwana w 3. rundzie).';
+    else if (card.effect === 'resilience') effectDesc = '★ Silna Wola: Zostaje na planszy do następnej rundy bez względu na moment postawienia.';
     else if (card.isSpy) effectDesc = '★ Szpieg: Trafia do przeciwnika, ale dociąga 2 karty z Twojej talii.';
 
     info.innerHTML = `
@@ -2185,12 +2252,14 @@ function resolveRound() {
     ['player', 'ai'].forEach(pType => {
         ['melee', 'range', 'siege'].forEach(rowType => {
             gameState[pType].board[rowType] = gameState[pType].board[rowType].filter(card => {
-                if (card.effect === 'resilience' && gameState.currentRound === 1) {
+                if (card.effect === 'resilience' && card.playedInRound === gameState.currentRound) {
                     return true;
                 }
                 return false;
             });
         });
+        // Resetowanie Rogów Dowódcy (Wzmocnienia) po zakończeniu rundy!
+        gameState[pType].horns = { melee: false, range: false, siege: false };
     });
 
     gameState.weather = { melee: false, range: false, siege: false };
@@ -2235,12 +2304,10 @@ function continueAfterPizzaDialog() {
 }
 
 function redawForBossRound4() {
-    // 1. Dociąganie dla Gracza niezależnie od zużytych kart
     let playerFactionCards = ALL_CARDS[gameState.player.faction || playerProfile.selectedFaction]
         .filter(c => playerProfile.decks[playerProfile.selectedFaction].includes(c.id));
 
     while (gameState.player.hand.length < 10) {
-        // Jeśli brakuje kart w pozostałej talii, losujemy nową kartę z pełnej talii gracza
         if (gameState.player.deck.length > 0) {
             gameState.player.hand.push(gameState.player.deck.shift());
         } else {
@@ -2249,8 +2316,6 @@ function redawForBossRound4() {
         }
     }
 
-    // 2. Dociąganie dla AI niezależnie od zużytych kart
-    let aiFaction = (currentCampaignLevelMatch !== null) ? 'MO' : (gameState.ai.faction || 'MO');
     let aiCardsPool = CAMPAIGN_AI_DECKS[currentCampaignLevelMatch] || CAMPAIGN_AI_DECKS[5];
 
     while (gameState.ai.hand.length < 10) {
