@@ -41,15 +41,19 @@
         .chest-info { font-size: 13px; color: #a89275; margin-bottom: 10px; line-height: 1.4; }
         .chest-info strong { color: #f3d179; }
 
-        /* KAMPANIA STYLE */
-        .campaign-container { display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 20px auto; width: 100%; }
-        .campaign-level-card { background: #18130f; border: 2px solid #5c4428; border-radius: 8px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        /* KAMPANIA I QUESTY STYLE */
+        .campaign-container, .quests-container { display: flex; flex-direction: column; gap: 12px; max-width: 650px; margin: 20px auto; width: 100%; }
+        .campaign-level-card, .quest-card { background: #18130f; border: 2px solid #5c4428; border-radius: 8px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .campaign-level-card.boss { border-color: #e55858; background: #261414; }
-        .campaign-level-card.completed { border-color: #58e558; }
-        .campaign-info { display: flex; flex-direction: column; text-align: left; }
-        .campaign-title { font-size: 18px; font-weight: bold; color: #f3d179; }
-        .campaign-reward { font-size: 13px; color: #a89275; margin-top: 4px; }
-        .campaign-reward strong { color: #f3d179; }
+        .campaign-level-card.completed, .quest-card.completed { border-color: #58e558; }
+        .campaign-info, .quest-info { display: flex; flex-direction: column; text-align: left; flex-grow: 1; padding-right: 15px; }
+        .campaign-title, .quest-title { font-size: 18px; font-weight: bold; color: #f3d179; }
+        .campaign-reward, .quest-reward { font-size: 13px; color: #a89275; margin-top: 4px; }
+        .campaign-reward strong, .quest-reward strong { color: #f3d179; }
+
+        /* Pasek postępu questów */
+        .quest-progress-bar-container { background: #120e0c; border: 1px solid #5c4428; border-radius: 4px; height: 12px; width: 100%; margin-top: 8px; overflow: hidden; position: relative; }
+        .quest-progress-fill { background: #58e574; height: 100%; width: 0%; transition: width 0.3s ease; }
 
         /* KARTY VISUAL */
         .card-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-height: 480px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
@@ -84,6 +88,31 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        /* KARTY DOWÓDCÓW */
+        .leader-section { margin-bottom: 10px; text-align: center; }
+        .leader-section h4 { margin: 4px 0 8px; color: #f3d179; }
+        .leader-picker { display: flex; gap: 14px; justify-content: center; }
+        .leader-card { width: 100px; height: 140px; border: 2px solid #b8862b; border-radius: 6px; position: relative; cursor: pointer; overflow: hidden;
+            background-color: #2a1d0e; background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center; transition: transform 0.2s, box-shadow 0.2s; flex-shrink: 0; }
+        .leader-card:hover { transform: translateY(-4px); box-shadow: 0 0 14px rgba(243,209,121,0.6); }
+        .leader-card.chosen { border: 3px solid #f3d179; box-shadow: 0 0 14px rgba(243,209,121,0.8); }
+        .leader-card .leader-name { width: 100%; background: rgba(0,0,0,0.8); color: #f3d179; font-size: 11px; font-weight: bold; text-align: center; padding: 4px 2px; }
+        .leader-card.used { filter: grayscale(1) brightness(0.5); cursor: not-allowed; }
+        .leader-card.used:hover { transform: none; box-shadow: none; }
+        .leader-card.armed { border-color: #c15cff; box-shadow: 0 0 16px #c15cff; animation: pulse 1s infinite; }
+        .leader-desc { font-size: 12px; color: #a89275; max-width: 520px; margin: 6px auto 0; min-height: 16px; }
+        .hand-wrap { display: flex; gap: 10px; align-items: stretch; }
+        .leader-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px; background: #14100d; border-radius: 6px; border: 1px solid #5c4428; }
+        .leader-slot small { font-size: 10px; color: #a89275; }
+        .hand-wrap .hand { flex: 1; }
+        .card.curse-target, .card.nightmare-target { border-color: #c15cff !important; box-shadow: 0 0 12px #c15cff; animation: pulse 1s infinite; cursor: crosshair; }
+        .card.cursed { border-color: #8a2be2; box-shadow: inset 0 0 18px rgba(138,43,226,0.7); }
+        .card.cursed .preview-btn { right: auto; left: 4px; }
+        .curse-badge { position: absolute; top: 3px; right: 3px; z-index: 11; width: 24px; height: 24px; border-radius: 50%; background: #5a1a8a; border: 1px solid #e0b3ff; color: #fff; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 8px #c15cff; }
+        .leader-modal-cards { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 15px 0; }
+        .leader-modal-cards .card:hover { transform: scale(1.08); }
 
         .preview-btn {
             position: absolute;
@@ -153,7 +182,18 @@
         }
 
         .row-label { position: absolute; right: 10px; font-size: 11px; color: #5c4428; font-weight: bold; text-transform: uppercase; pointer-events: none; }
-        .hand { display: flex; gap: 8px; min-height: 155px; padding: 8px; background: #14100d; border-radius: 6px; justify-content: center; }
+        .hand { 
+            display: flex; 
+            gap: 6px; 
+            min-height: 145px; 
+            padding: 8px; 
+            background: #14100d; 
+            border-radius: 6px; 
+            justify-content: center; 
+            align-content: center; 
+            overflow-y: auto;
+            max-height: 310px;     
+        }
         .gems { display: flex; gap: 4px; }
         .gem { width: 12px; height: 12px; border-radius: 50%; background: #444; }
         .gem.active { background: #e5c158; box-shadow: 0 0 6px #e5c158; }
@@ -422,12 +462,23 @@
         </div>
         <div class="menu-btns">
             <button onclick="showScreen('screen-campaign-list')" style="background: #2d6a37; border-color: #58e574;">⚔️ KAMPANIA</button>
+            <button onclick="showScreen('screen-quests')" style="background: #b8860b; border-color: #f3d179;">📜 Questy</button>
             <button onclick="showScreen('screen-deck')">Edytor Talii i Kolekcja</button>
             <button onclick="showScreen('screen-shop')">Sklep z Kartami</button>
             <button onclick="openLegendModal()" style="background: #2b4c6f; border-color: #58a6e5;">📖 Legenda umiejętności</button>
-            <button id="play-btn" onclick="openGameOptionsModal()" style="background: #8c2d2d; border-color: #e55858; font-size: 20px; margin-top: 20px;">SZYBKA GRA</button>
+            <button id="play-btn" onclick="openGameOptionsModal()" style="background: #8c2d2d; border-color: #e55858; font-size: 20px; margin-top: 10px;">SZYBKA GRA</button>
             <div id="lobby-status" style="color: #ff6b6b; font-size: 13px; margin-top: 5px;"></div>
         </div>
+    </div>
+
+    <!-- EKRAN QUESTÓW -->
+    <div id="screen-quests" class="screen">
+        <div class="top-bar">
+            <h2>ZADANIA (QUESTY)</h2>
+            <div class="gold-display">Złoto: <span id="quests-gold">0</span> 🪙</div>
+        </div>
+        <div class="quests-container" id="quests-list-container"></div>
+        <button class="btn-back" onclick="showScreen('screen-lobby')">Powrót do Menu</button>
     </div>
 
     <!-- EKRAN SELEKCJI KAMPANII -->
@@ -509,6 +560,11 @@
             <span id="deck-count-text">Karty w talii: 0/10</span> 
             <small style="color: #a89275; display: block; margin-top: 3px;">(Kliknij odblokowaną kartę, aby dodać lub usunąć ją z talii)</small>
         </div>
+        <div class="leader-section">
+            <h4>👑 Karta Dowódcy (jednorazowa zdolność w grze)</h4>
+            <div class="leader-picker" id="leader-picker"></div>
+            <div class="leader-desc" id="leader-desc"></div>
+        </div>
         <div class="card-grid" id="collection-grid"></div>
         <button class="btn-back" onclick="showScreen('screen-lobby')">Powrót do Menu</button>
     </div>
@@ -571,7 +627,7 @@
             <div class="hud">
                 <div class="hud-left">
                     <span id="ai-faction-label" style="font-weight: bold;">AI</span>
-                    <span class="card-count-badge">(Karty w ręce: <span id="ai-hand-count">0</span>)</span>
+                    <span class="card-count-badge">(Karty w ręce: <span id="ai-hand-count">0</span> | Dowódca: <span id="ai-leader-status">👑 Gotowy</span>)</span>
                 </div>
                 <div class="hud-right">
                     <div class="gems" id="ai-gems"></div>
@@ -628,7 +684,10 @@
                     <span id="player-score" style="font-size: 20px; font-weight: bold; color: #f3d179;">0</span>
                 </div>
             </div>
-            <div class="hand" id="player-hand"></div>
+            <div class="hand-wrap">
+                <div class="leader-slot" id="player-leader-slot"></div>
+                <div class="hand" id="player-hand"></div>
+            </div>
         </div>
         <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: center;">
             <button id="pass-btn" onclick="playerPass()">Spasuj Rundę</button>
@@ -645,7 +704,54 @@
         </div>
     </div>
 
+    <!-- Modal zdolności dowódcy -->
+    <div id="leader-modal" class="modal">
+        <div class="modal-content" style="max-width: 720px;">
+            <h3 id="leader-modal-title">Dowódca</h3>
+            <div id="leader-modal-text" style="font-size: 14px; color: #a89275;"></div>
+            <div class="leader-modal-cards" id="leader-modal-cards"></div>
+            <div class="modal-btns" id="leader-modal-btns"></div>
+        </div>
+    </div>
+
 <script>
+const LEADERS = {
+    NR: [
+        { id: 'ld_watcher', name: 'Watcher', ability: 'watcher', image: 'Grafiki/Watcher.jpg', desc: 'Ujawnia 5 losowych kart z ręki przeciwnika.' },
+        { id: 'ld_dziadkatus', name: 'Dziadkatus', ability: 'dziadkatus', image: 'Grafiki/Galactus.jpg', desc: 'Wybierz dowolną kartę pogody – zostanie natychmiast użyta.' }
+    ],
+    MO: [
+        { id: 'ld_kurator', name: 'Kurator', ability: 'kurator', image: 'Grafiki/Kurator.jpg', desc: 'Nakłada przekleństwo na wybraną kartę (nie złotą). Po 4 ruchach graczy karta zostaje usunięta.' },
+        { id: 'ld_koszmar', name: 'Koszmar czopa', ability: 'koszmar', image: 'Grafiki/Piramid.jpg', desc: 'Eliminuje wybraną złotą kartę z planszy. Nie można użyć, gdy na planszy nie ma złotych kart.' }
+    ]
+};
+const LEADERS_MAP = {};
+[...LEADERS.NR, ...LEADERS.MO].forEach(l => LEADERS_MAP[l.id] = l);
+const CURSE_MOVES = 4;
+
+function leaderCardHtml(leader, extraClass = '') {
+    return `<div class="leader-card ${extraClass}" style="background-image: url('${leader.image}')">
+        <div class="preview-btn" onclick="event.stopPropagation(); showLeaderPreview('${leader.id}')">🔍</div>
+        <div class="leader-name">${leader.name}</div>
+    </div>`;
+}
+
+function showLeaderPreview(leaderId) {
+    let leader = LEADERS_MAP[leaderId];
+    if (!leader) return;
+    const modal = document.getElementById('card-preview-modal');
+    const img = document.getElementById('preview-img');
+    const info = document.getElementById('preview-info');
+
+    img.src = leader.image;
+    info.innerHTML = `
+        <h3>${leader.name} (Dowódca)</h3>
+        <p style="color: #74c0fc;">${leader.desc}</p>
+        <small style="color: #888; display: block; margin-top: 8px;">(Kliknij gdziekolwiek, aby zamknąć)</small>
+    `;
+    modal.classList.add('active');
+}
+
 const COMMON_SPECIALS = [
     { id: 'sp_decoy', name: 'Manekin', power: 0, type: 'special', effect: 'decoy', isGold: false, image: 'Grafiki/Manekin.jpg' },
     { id: 'sp_scorch', name: 'Pożoga', power: 0, type: 'special', effect: 'scorch', isGold: false, image: 'Grafiki/Pozoga.jpg' },
@@ -713,7 +819,6 @@ const ALL_CARDS = {
 const ALL_CARDS_MAP = {};
 [...ALL_CARDS.NR, ...ALL_CARDS.MO].forEach(c => ALL_CARDS_MAP[c.id] = c);
 
-// NAPRAWA: Zaktualizowane domyślne talie nie zawierają już kart nieodblokowanych
 let playerProfile = {
     gold: 0,
     selectedFaction: 'NR',
@@ -726,18 +831,27 @@ let playerProfile = {
     campaignProgress: {
         unlockedLevel: 1,
         claimedRewards: []
-    }
+    },
+    questWins: { NR: 0, MO: 0 },
+    questClaimed: { NR: false, MO: false }, // Dodane do śledzenia odebrania nagrody
+    leaders: { NR: 'ld_watcher', MO: 'ld_kurator' }
 };
 
 let activeEditorFaction = 'NR';
 let currentCampaignLevelMatch = null;
 
 function loadProgress() {
-    let saved = localStorage.getItem('gwint_profile_v5');
+    let saved = localStorage.getItem('gwint_profile_v6');
     if (saved) {
         playerProfile = JSON.parse(saved);
         if(!playerProfile.campaignProgress) {
             playerProfile.campaignProgress = { unlockedLevel: 1, claimedRewards: [] };
+        }
+        if(!playerProfile.questWins) {
+            playerProfile.questWins = { NR: 0, MO: 0 };
+        }
+        if(!playerProfile.questClaimed) {
+            playerProfile.questClaimed = { NR: false, MO: false };
         }
         ['sp_decoy', 'sp_scorch'].forEach(specialId => {
             if (!playerProfile.unlockedCards.includes(specialId)) {
@@ -746,11 +860,23 @@ function loadProgress() {
         });
     }
 
-    // NAPRAWA: Jeśli gracz miał wcześniej zapisane w talii karty, których nie odblokował, zostaną one stąd usunięte.
     ['NR', 'MO'].forEach(faction => {
         if (playerProfile.decks[faction]) {
             playerProfile.decks[faction] = playerProfile.decks[faction].filter(cardId => playerProfile.unlockedCards.includes(cardId));
         }
+    });
+
+    if (!playerProfile.leaders) playerProfile.leaders = {};
+    
+    // Sprawdzamy czy domyślnie wybrane karty dowódców nie są zablokowane
+    let nrChosen = playerProfile.leaders.NR;
+    if (nrChosen === 'ld_dziadkatus' && !playerProfile.questClaimed.NR) playerProfile.leaders.NR = 'ld_watcher';
+    let moChosen = playerProfile.leaders.MO;
+    if (moChosen === 'ld_koszmar' && !playerProfile.questClaimed.MO) playerProfile.leaders.MO = 'ld_kurator';
+
+    ['NR', 'MO'].forEach(f => {
+        let cur = playerProfile.leaders[f];
+        if (!cur || !LEADERS[f].some(l => l.id === cur)) playerProfile.leaders[f] = LEADERS[f][0].id;
     });
 
     activeEditorFaction = playerProfile.selectedFaction || 'NR';
@@ -760,7 +886,7 @@ function loadProgress() {
 }
 
 function saveProgress() {
-    localStorage.setItem('gwint_profile_v5', JSON.stringify(playerProfile));
+    localStorage.setItem('gwint_profile_v6', JSON.stringify(playerProfile));
     updateGoldDisplays();
     checkDeckStatus();
     renderShopUI();
@@ -772,6 +898,8 @@ function updateGoldDisplays() {
     document.getElementById('shop-gold').innerText = playerProfile.gold;
     document.getElementById('campaign-list-gold').innerText = playerProfile.gold;
     document.getElementById('campaign-levels-gold').innerText = playerProfile.gold;
+    let qGold = document.getElementById('quests-gold');
+    if(qGold) qGold.innerText = playerProfile.gold;
 }
 
 function checkDeckStatus() {
@@ -805,7 +933,77 @@ function showScreen(screenId) {
     if (screenId === 'screen-campaign-levels') {
         renderCampaignLevels();
     }
+    if (screenId === 'screen-quests') {
+        renderQuestsUI();
+    }
     checkDeckStatus();
+}
+
+function claimQuestReward(faction) {
+    if (faction === 'NR' && playerProfile.questWins.NR >= 5 && !playerProfile.questClaimed.NR) {
+        playerProfile.questClaimed.NR = true;
+        saveProgress();
+        renderQuestsUI();
+    } else if (faction === 'MO' && playerProfile.questWins.MO >= 5 && !playerProfile.questClaimed.MO) {
+        playerProfile.questClaimed.MO = true;
+        saveProgress();
+        renderQuestsUI();
+    }
+}
+
+function renderQuestsUI() {
+    const container = document.getElementById('quests-list-container');
+    container.innerHTML = '';
+
+    let nrWins = Math.min(5, playerProfile.questWins.NR);
+    let moWins = Math.min(5, playerProfile.questWins.MO);
+
+    let nrReady = nrWins >= 5 && !playerProfile.questClaimed.NR;
+    let nrClaimed = playerProfile.questClaimed.NR;
+
+    let moReady = moWins >= 5 && !playerProfile.questClaimed.MO;
+    let moClaimed = playerProfile.questClaimed.MO;
+
+    let nrPercent = (nrWins / 5) * 100;
+    let moPercent = (moWins / 5) * 100;
+
+    // Quest 1: Bohaterowie
+    let q1 = document.createElement('div');
+    q1.className = `quest-card ${nrClaimed ? 'completed' : ''}`;
+    q1.innerHTML = `
+        <div class="quest-info">
+            <div class="quest-title">Wygraj 5 gier talią Bohaterów</div>
+            <div class="quest-reward">Postęp: <strong>${nrWins}/5</strong> | Nagroda: <strong>Karta dowódcy Dziadkatus</strong> ${nrClaimed ? '(Odebrano ✓)' : ''}</div>
+            <div class="quest-progress-bar-container">
+                <div class="quest-progress-fill" style="width: ${nrPercent}%;"></div>
+            </div>
+        </div>
+        <div>
+            <button ${!nrReady && !nrClaimed ? 'disabled' : ''} ${nrClaimed ? 'disabled' : ''} onclick="${nrReady ? "claimQuestReward('NR')" : ""}">
+                ${nrClaimed ? 'Odebrano' : (nrReady ? 'Odbierz' : 'Odbierz')}
+            </button>
+        </div>
+    `;
+    container.appendChild(q1);
+
+    // Quest 2: Weterani horroru
+    let q2 = document.createElement('div');
+    q2.className = `quest-card ${moClaimed ? 'completed' : ''}`;
+    q2.innerHTML = `
+        <div class="quest-info">
+            <div class="quest-title">Wygraj 5 gier talią Weteranów horroru</div>
+            <div class="quest-reward">Postęp: <strong>${moWins}/5</strong> | Nagroda: <strong>Karta dowódcy Koszmar czopa</strong> ${moClaimed ? '(Odebrano ✓)' : ''}</div>
+            <div class="quest-progress-bar-container">
+                <div class="quest-progress-fill" style="width: ${moPercent}%;"></div>
+            </div>
+        </div>
+        <div>
+            <button ${!moReady && !moClaimed ? 'disabled' : ''} ${moClaimed ? 'disabled' : ''} onclick="${moReady ? "claimQuestReward('MO')" : ""}">
+                ${moClaimed ? 'Odebrano' : (moReady ? 'Odbierz' : 'Odbierz')}
+            </button>
+        </div>
+    `;
+    container.appendChild(q2);
 }
 
 function renderCampaignLevels() {
@@ -964,6 +1162,8 @@ function renderDeckEditor() {
     let currentDeck = playerProfile.decks[activeEditorFaction];
     document.getElementById('deck-count-text').innerText = `Karty w talii (${activeEditorFaction === 'NR' ? 'Bohaterowie' : 'Weterani horroru'}): ${currentDeck.length} (wymagane: 10-22)`;
 
+    renderLeaderPicker();
+
     const grid = document.getElementById('collection-grid');
     grid.innerHTML = '';
 
@@ -988,6 +1188,39 @@ function renderDeckEditor() {
         }
         grid.appendChild(cardEl);
     });
+}
+
+function renderLeaderPicker() {
+    const picker = document.getElementById('leader-picker');
+    picker.innerHTML = '';
+    let chosenId = playerProfile.leaders[activeEditorFaction];
+    
+    LEADERS[activeEditorFaction].forEach(leader => {
+        let isLocked = false;
+        if (leader.id === 'ld_dziadkatus' && !playerProfile.questClaimed.NR) isLocked = true;
+        if (leader.id === 'ld_koszmar' && !playerProfile.questClaimed.MO) isLocked = true;
+
+        let wrap = document.createElement('div');
+        if (isLocked) {
+            wrap.innerHTML = `<div class="leader-card locked" style="background-color: #100d0b; border-color: #3d3124; display: flex; align-items: center; justify-content: center;" title="Zablokowane! Odbierz nagrodę z questu, aby odblokować dowódcę.">
+                <div style="font-size: 26px; color: #666;">🔒</div>
+                <div class="leader-name">${leader.name}</div>
+            </div>`;
+        } else {
+            wrap.innerHTML = leaderCardHtml(leader, leader.id === chosenId ? 'chosen' : '');
+            let el = wrap.firstElementChild;
+            el.title = leader.desc;
+            el.onclick = () => {
+                playerProfile.leaders[activeEditorFaction] = leader.id;
+                saveProgress();
+                renderDeckEditor();
+            };
+        }
+        picker.appendChild(wrap.firstElementChild);
+    });
+    
+    let chosen = LEADERS_MAP[chosenId];
+    document.getElementById('leader-desc').innerHTML = chosen ? `<strong style="color:#f3d179">${chosen.name}:</strong> ${chosen.desc}` : '';
 }
 
 function toggleCardInDeck(cardId) {
@@ -1169,12 +1402,11 @@ function generateBalancedAIDeck(faction) {
         }
     }
 
-    // Filtrowanie ręki: max 2-3 karty specjalne (pogoda, pożoga, manekin, wzmocnienie)
     let shuffled = shuffleArray(rawDeck);
     let units = shuffled.filter(c => c.type !== 'special' && c.type !== 'weather');
     let specials = shuffled.filter(c => c.type === 'special' || c.type === 'weather');
 
-    let allowedSpecialsCount = Math.floor(Math.random() * 2) + 2; // 2 lub 3 karty
+    let allowedSpecialsCount = Math.floor(Math.random() * 2) + 2;
     let chosenSpecials = specials.slice(0, allowedSpecialsCount);
     let chosenUnits = units;
 
@@ -1198,10 +1430,10 @@ function initiatePreMatch(aiFactionChoice = 'RANDOM') {
     }
 
     let playerDeckIds = playerProfile.decks[pFaction].filter(id => playerProfile.unlockedCards.includes(id));
-let fullPlayerDeck = playerDeckIds
-    .map(id => ALL_CARDS_MAP[id])
-    .filter(c => c !== undefined)
-    .map(c => ({ ...c, idUnique: Math.random() }));
+    let fullPlayerDeck = playerDeckIds
+        .map(id => ALL_CARDS_MAP[id])
+        .filter(c => c !== undefined)
+        .map(c => ({ ...c, idUnique: Math.random() }));
 
     fullPlayerDeck = shuffleArray(fullPlayerDeck);
 
@@ -1297,6 +1529,26 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
     let firstTurn = Math.random() < 0.5 ? 'player' : 'ai';
     let requiredWins = (currentCampaignLevelMatch === 5) ? 3 : 2;
 
+    // NOWY KOD (losujący tylko spośród dowódców odblokowanych przez gracza):
+let aiChosenFaction = aiFaction === 'ORK_MACIAS' ? 'MO' : aiFaction;
+
+// 1. Pobieramy pełną listę dowódców dla frakcji AI
+let aiFactionLeaders = LEADERS[aiChosenFaction] || LEADERS['NR'];
+
+// 2. Filtrujemy dowódców – AI może używać tylko tych, których gracz odblokował
+let aiUnlockedLeaders = aiFactionLeaders.filter(leader => {
+    if (leader.id === 'ld_dziadkatus') return playerProfile.questClaimed.NR;
+    if (leader.id === 'ld_koszmar') return playerProfile.questClaimed.MO;
+    return true; // Domyślni dowódcy (Watcher, Kurator) są zawsze odblokowani
+});
+
+// 3. Losujemy dowódcę dla AI wyłącznie z odblokowanej puli
+let aiRandomLeader = aiUnlockedLeaders[Math.floor(Math.random() * aiUnlockedLeaders.length)];
+
+    let playerChosenLeaderId = (playerProfile.leaders && playerProfile.leaders[pFaction]) || LEADERS[pFaction][0].id;
+    if (pFaction === 'NR' && playerChosenLeaderId === 'ld_dziadkatus' && !playerProfile.questClaimed.NR) playerChosenLeaderId = 'ld_watcher';
+    if (pFaction === 'MO' && playerChosenLeaderId === 'ld_koszmar' && !playerProfile.questClaimed.MO) playerChosenLeaderId = 'ld_kurator';
+
     gameState = {
         player: { 
             faction: pFaction,
@@ -1305,7 +1557,8 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
             board: { melee: [], range: [], siege: [] },
             horns: { melee: false, range: false, siege: false },
             wins: 0, 
-            passed: false 
+            passed: false,
+            leader: { id: playerChosenLeaderId, used: false }
         },
         ai: { 
             faction: aiFaction,
@@ -1315,7 +1568,8 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
             horns: { melee: false, range: false, siege: false },
             wins: 0, 
             passed: false, 
-            cardsPlayedThisRound: 0 
+            cardsPlayedThisRound: 0,
+            leader: { id: aiRandomLeader.id, used: false }
         },
         weather: {
             melee: false,
@@ -1327,6 +1581,8 @@ function startBattleWithHand(pFaction, aiFaction, finalHand, remainingDeck) {
         currentRound: 1,
         turn: firstTurn,
         selectedCardIndex: null,
+        leaderTargeting: null,
+        skipCurseTick: false,
         gameOver: false
     };
 
@@ -1347,6 +1603,11 @@ function updateAILastMoveBar(text) {
 
 function updateUI() {
     document.getElementById('ai-hand-count').innerText = gameState.ai.hand.length;
+    let aiLeaderStatusEl = document.getElementById('ai-leader-status');
+    if (aiLeaderStatusEl && gameState.ai.leader) {
+        aiLeaderStatusEl.innerText = gameState.ai.leader.used ? '❌ Użyty' : '👑 Gotowy';
+    }
+
     document.getElementById('player-hand-count').innerText = gameState.player.hand.length;
     
     const pHand = document.getElementById('player-hand');
@@ -1404,6 +1665,144 @@ function updateUI() {
     updateGems('ai-gems', gameState.ai.wins, gameState.winsRequired);
 
     document.getElementById('pass-btn').disabled = gameState.player.passed || gameState.gameOver;
+    renderLeaderSlot();
+}
+
+function anyGoldOnBoard() {
+    return ['melee', 'range', 'siege'].some(r => gameState.ai.board[r].some(c => c.isGold));
+}
+
+function canUseLeader() {
+    let ld = gameState.player.leader;
+    if (!ld || ld.used || gameState.gameOver) return false;
+    if (gameState.turn !== 'player' || gameState.player.passed) return false;
+    let leader = LEADERS_MAP[ld.id];
+    if (leader.ability === 'koszmar' && !anyGoldOnBoard()) return false;
+    if (leader.ability === 'kurator' && !anyCursableOnBoard()) return false;
+    return true;
+}
+
+function anyCursableOnBoard() {
+    return ['melee', 'range', 'siege'].some(r => gameState.ai.board[r].some(c => !c.isGold && c.type !== 'special' && !c.curse));
+}
+
+function renderLeaderSlot() {
+    const slot = document.getElementById('player-leader-slot');
+    if (!slot) return;
+    let ld = gameState.player.leader;
+    let leader = ld ? LEADERS_MAP[ld.id] : null;
+    if (!leader) { slot.innerHTML = ''; return; }
+    let cls = ld.used ? 'used' : (gameState.leaderTargeting ? 'armed' : '');
+    let label = ld.used ? 'Użyto' : (gameState.leaderTargeting ? 'Wybierz cel (kliknij, by anulować)' : (canUseLeader() ? 'Kliknij, by użyć' : 'Niedostępny'));
+    slot.innerHTML = leaderCardHtml(leader, cls) + `<small>${label}</small>`;
+    let el = slot.querySelector('.leader-card');
+    el.title = leader.desc;
+    el.onclick = () => useLeader();
+}
+
+function useLeader() {
+    let ld = gameState.player.leader;
+    if (!ld || ld.used) { setStatus('Karta dowódcy została już użyta w tej grze.'); return; }
+    if (gameState.leaderTargeting) {
+        gameState.leaderTargeting = null;
+        setStatus('Anulowano użycie dowódcy.');
+        updateUI();
+        return;
+    }
+    if (gameState.turn !== 'player' || gameState.player.passed || gameState.gameOver) { setStatus('Możesz użyć dowódcy tylko w swojej turze.'); return; }
+    let leader = LEADERS_MAP[ld.id];
+    gameState.selectedCardIndex = null;
+
+    if (leader.ability === 'watcher') {
+        let pool = shuffleArray(gameState.ai.hand).slice(0, 5);
+        ld.used = true;
+        openLeaderModal(`👁️ ${leader.name}`, pool.length ? `Podglądasz ${pool.length} losowych kart z ręki przeciwnika:` : 'Przeciwnik nie ma kart w ręce.',
+            pool, null, [{ text: 'Zamknij', action: () => { closeLeaderModal(); setStatus('Watcher ujawnił karty przeciwnika.'); endTurn('player'); } }]);
+    } else if (leader.ability === 'dziadkatus') {
+        let weathers = ['w1', 'w2', 'w3', 'w4'].map(id => ALL_CARDS_MAP[id]);
+        openLeaderModal(`🌦️ ${leader.name}`, 'Wybierz kartę pogody, która zostanie użyta:', weathers, (card) => {
+            ld.used = true;
+            closeLeaderModal();
+            applyWeatherEffect(card.effect);
+            updateAILastMoveBar(`Gracz użył dowódcy Dziadkatus: ${card.name}`);
+            endTurn('player');
+        }, [{ text: 'Anuluj', action: () => closeLeaderModal() }]);
+    } else if (leader.ability === 'kurator') {
+        if (!anyCursableOnBoard()) { setStatus('Brak kart (nie złotych) na planszy, które można przekląć.'); return; }
+        gameState.leaderTargeting = 'curse';
+        setStatus('Kurator: kliknij kartę (nie złotą) na planszy, aby nałożyć przekleństwo.');
+        updateUI();
+    } else if (leader.ability === 'koszmar') {
+        if (!anyGoldOnBoard()) { setStatus('Na planszy nie ma złotych kart – nie można użyć Koszmaru czopa.'); return; }
+        gameState.leaderTargeting = 'nightmare';
+        setStatus('Koszmar czopa: kliknij złotą kartę na planszy, aby ją wyeliminować.');
+        updateUI();
+    }
+}
+
+function applyLeaderTarget(ownerType, rowType, cardIdx) {
+    let ld = gameState.player.leader;
+    let card = gameState[ownerType].board[rowType][cardIdx];
+    if (!card) return;
+    if (gameState.leaderTargeting === 'curse') {
+        card.curse = CURSE_MOVES;
+        ld.used = true;
+        gameState.leaderTargeting = null;
+        gameState.skipCurseTick = true;
+        setStatus(`Kurator przeklął kartę ${card.name}! Zniknie za ${CURSE_MOVES} ruchy.`);
+        endTurn('player');
+    } else if (gameState.leaderTargeting === 'nightmare') {
+        gameState[ownerType].board[rowType].splice(cardIdx, 1);
+        ld.used = true;
+        gameState.leaderTargeting = null;
+        setStatus(`Koszmar czopa wyeliminował złotą kartę: ${card.name}!`);
+        endTurn('player');
+    }
+}
+
+function tickCurses() {
+    let removed = [];
+    ['player', 'ai'].forEach(p => {
+        ['melee', 'range', 'siege'].forEach(r => {
+            gameState[p].board[r] = gameState[p].board[r].filter(c => {
+                if (!c.curse) return true;
+                c.curse--;
+                if (c.curse <= 0) { removed.push(c.name); return false; }
+                return true;
+            });
+        });
+    });
+    if (removed.length) setStatus(`Przekleństwo Kuratora pochłonęło kartę: ${removed.join(', ')}!`);
+}
+
+function openLeaderModal(title, text, cards, onPick, buttons) {
+    document.getElementById('leader-modal-title').innerText = title;
+    document.getElementById('leader-modal-text').innerText = text;
+    const box = document.getElementById('leader-modal-cards');
+    box.innerHTML = '';
+    cards.forEach(card => {
+        let el = document.createElement('div');
+        el.className = 'card';
+        el.style.backgroundImage = `url('${card.image}')`;
+        el.title = card.name;
+        el.innerHTML = `<div class="card-status">${card.name}${card.type !== 'weather' && card.type !== 'special' ? ' (' + card.power + ')' : ''}</div>`;
+        if (onPick) el.onclick = () => onPick(card);
+        else el.onclick = () => showCardPreview(card);
+        box.appendChild(el);
+    });
+    const btns = document.getElementById('leader-modal-btns');
+    btns.innerHTML = '';
+    buttons.forEach(b => {
+        let btn = document.createElement('button');
+        btn.innerText = b.text;
+        btn.onclick = b.action;
+        btns.appendChild(btn);
+    });
+    document.getElementById('leader-modal').classList.add('active');
+}
+
+function closeLeaderModal() {
+    document.getElementById('leader-modal').classList.remove('active');
 }
 
 function renderBoardCard(card, isEnemy = false, rowType = null, cardIndex = null) {
@@ -1422,6 +1821,21 @@ function renderBoardCard(card, isEnemy = false, rowType = null, cardIndex = null
         }
     }
 
+    let ownerType = isEnemy ? 'ai' : 'player';
+    
+    if (gameState.leaderTargeting && rowType !== null && isEnemy) {
+        let ok = gameState.leaderTargeting === 'curse'
+            ? (!card.isGold && card.type !== 'special' && !card.curse)
+            : (card.isGold);
+        if (ok) {
+            div.classList.add(gameState.leaderTargeting === 'curse' ? 'curse-target' : 'nightmare-target');
+            div.onclick = (e) => {
+                e.stopPropagation();
+                applyLeaderTarget(ownerType, rowType, cardIndex);
+            };
+        }
+    }
+
     let previewBtn = document.createElement('div');
     previewBtn.className = 'preview-btn';
     previewBtn.innerText = '🔍';
@@ -1431,6 +1845,15 @@ function renderBoardCard(card, isEnemy = false, rowType = null, cardIndex = null
     };
 
     div.appendChild(previewBtn);
+
+    if (card.curse) {
+        div.classList.add('cursed');
+        let badge = document.createElement('div');
+        badge.className = 'curse-badge';
+        badge.title = `Przekleństwo: zostało ${card.curse} ruchów do usunięcia`;
+        badge.innerText = card.curse;
+        div.appendChild(badge);
+    }
     return div;
 }
 
@@ -1441,6 +1864,7 @@ function replaceWithDecoy(pType, rowType, cardIdx) {
     let decoyCard = hand.splice(gameState.selectedCardIndex, 1)[0];
     let targetCard = gameState[pType].board[rowType].splice(cardIdx, 1, decoyCard)[0];
     
+    delete targetCard.curse;
     hand.push(targetCard);
     
     gameState.selectedCardIndex = null;
@@ -1500,6 +1924,7 @@ function updateGems(id, wins, totalRequired) {
 
 function selectCard(idx) {
     if (gameState.turn !== 'player' || gameState.player.passed) return;
+    gameState.leaderTargeting = null;
     let card = gameState.player.hand[idx];
 
     if (card.isSpy) {
@@ -1784,6 +2209,8 @@ function playerPass() {
 
 function passRound(who) {
     gameState[who].passed = true;
+    gameState.leaderTargeting = null;
+    gameState.skipCurseTick = true;
     if (who === 'ai') {
         updateAILastMoveBar("AI spasowało rundę.");
         setStatus("AI spasowało rundę.");
@@ -1794,23 +2221,26 @@ function passRound(who) {
 }
 
 function endTurn(last) {
+    if (gameState.skipCurseTick) {
+        gameState.skipCurseTick = false;
+    } else {
+        tickCurses();
+    }
     updateUI();
     
-    // 1. Rozstrzygnięcie rundy, gdy obaj spasowali
     if (gameState.player.passed && gameState.ai.passed) {
         setTimeout(resolveRound, 1000);
         return;
     }
 
-    // 2. Automatyczne spasowanie gracza po zagraniu ostatniej karty z ręki
     if (!gameState.player.passed && gameState.player.hand.length === 0) {
         gameState.player.passed = true;
         setStatus("Brak kart w ręce – automatyczny pas gracza.");
+        gameState.skipCurseTick = true;
         endTurn('player');
         return;
     }
 
-    // 3. Obsługa kolei ruchów
     if (last === 'player') {
         if (!gameState.ai.passed) {
             gameState.turn = 'ai';
@@ -1848,8 +2278,93 @@ function applyWeatherEffect(effect) {
     }
 }
 
+function aiTryUseLeader() {
+    let ld = gameState.ai.leader;
+    if (!ld || ld.used) return false;
+    let leader = LEADERS_MAP[ld.id];
+
+    if (leader.ability === 'dziadkatus') {
+        let pMelee = calcRowScore('player', 'melee');
+        let pRange = calcRowScore('player', 'range');
+        let pSiege = calcRowScore('player', 'siege');
+        
+        let targetWeather = null;
+        if (pMelee >= pRange && pMelee >= pSiege && pMelee >= 6 && !gameState.weather.melee) targetWeather = 'frost';
+        else if (pRange >= pMelee && pRange >= pSiege && pRange >= 6 && !gameState.weather.range) targetWeather = 'fog';
+        else if (pSiege >= pMelee && pSiege >= pRange && pSiege >= 6 && !gameState.weather.siege) targetWeather = 'rain';
+
+        if (targetWeather) {
+            ld.used = true;
+            applyWeatherEffect(targetWeather);
+            updateAILastMoveBar(`AI użyło dowódcy ${leader.name} i zagrało pogodę!`);
+            updateUI();
+            endTurn('ai');
+            return true;
+        }
+    }
+
+    if (leader.ability === 'watcher') {
+        ld.used = true;
+        updateAILastMoveBar(`AI użyło dowódcy ${leader.name} (Watcher).`);
+        updateUI();
+        endTurn('ai');
+        return true;
+    }
+
+    if (leader.ability === 'kurator') {
+        let bestTarget = null;
+        let maxPwr = -1;
+        ['melee', 'range', 'siege'].forEach(r => {
+            gameState.player.board[r].forEach((c, cIdx) => {
+                if (!c.isGold && !c.curse && c.power > maxPwr) {
+                    maxPwr = c.power;
+                    bestTarget = { row: r, idx: cIdx, card: c };
+                }
+            });
+        });
+
+        if (bestTarget && maxPwr >= 4) {
+            bestTarget.card.curse = CURSE_MOVES;
+            ld.used = true;
+            gameState.skipCurseTick = true;
+            updateAILastMoveBar(`AI użyło dowódcy ${leader.name} – przeklęto kartę ${bestTarget.card.name}!`);
+            updateUI();
+            endTurn('ai');
+            return true;
+        }
+    }
+
+    if (leader.ability === 'koszmar') {
+        let goldTarget = null;
+        let maxGoldPwr = -1;
+        ['melee', 'range', 'siege'].forEach(r => {
+            gameState.player.board[r].forEach((c, cIdx) => {
+                if (c.isGold && c.power > maxGoldPwr) {
+                    maxGoldPwr = c.power;
+                    goldTarget = { row: r, idx: cIdx, card: c };
+                }
+            });
+        });
+
+        if (goldTarget) {
+            gameState.player.board[goldTarget.row].splice(goldTarget.idx, 1);
+            ld.used = true;
+            updateAILastMoveBar(`AI użyło dowódcy ${leader.name} i zniszczyło Twoją złotą kartę: ${goldTarget.card.name}!`);
+            updateUI();
+            endTurn('ai');
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function aiTurn() {
     if (gameState.gameOver || gameState.ai.passed) return;
+
+    if (Math.random() < 0.65 && aiTryUseLeader()) {
+        return;
+    }
 
     if (gameState.ai.hand.length === 0) {
         passRound('ai');
@@ -1864,23 +2379,16 @@ function aiTurn() {
     const scoreDiff = aiScore - playerScore;
     const cardsInHand = gameState.ai.hand.length;
 
-    // Decydująca runda (ostatnia runda meczu lub gdy wygrana da zwycięstwo)
     const isDecisiveRound = (aiWins === gameState.winsRequired - 1 && playerWins === gameState.winsRequired - 1) || 
                            (round >= gameState.winsRequired * 2 - 1) ||
                            (playerWins === gameState.winsRequired - 1 && aiWins < gameState.winsRequired - 1);
 
     if (gameState.player.passed) {
-        // Jeśli AI wygrywa, opłaca się spasować
         if (aiScore > playerScore) {
             passRound('ai');
             return;
         }
-        // W decydującej rundzie NIE pasuj gdy przegrywasz lub remisujesz - wygraj za wszelką cenę!
-        if (isDecisiveRound) {
-            // Kontynuuj grę
-        }
     } else {
-        // Pasowanie taktyczne w 1 lub 2 rundzie (TYLKO gdy runda NIE jest decydująca)
         if (!isDecisiveRound) {
             if (round === 1) {
                 if (scoreDiff >= 15 || scoreDiff <= -15) {
@@ -1919,7 +2427,6 @@ function aiPlayBestCard() {
                          (currentCampaignLevelMatch === 5 && round >= 4) || 
                          (currentCampaignLevelMatch !== 5 && round >= 3);
 
-    // 1. Zagraj Szpiega jeśli możliwy
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].isSpy && hand[i].type !== gameState.disabledRow) {
             playSpyCard('ai', i);
@@ -1928,7 +2435,6 @@ function aiPlayBestCard() {
         }
     }
 
-    // 2. Manekin (gdy warto cofnąć własną kartę/szpiega)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'decoy') {
             let bestTarget = findBestDecoyTarget('ai');
@@ -1938,6 +2444,7 @@ function aiPlayBestCard() {
                     id: 'sp_decoy', name: 'Manekin', power: 0, type: 'special', effect: 'decoy', isGold: false, image: 'Grafiki/Manekin.jpg'
                 })[0];
 
+                delete targetCard.curse;
                 hand.push(targetCard);
 
                 if (targetCard.isSpy) {
@@ -1955,7 +2462,6 @@ function aiPlayBestCard() {
         }
     }
 
-    // 3. Wzmocnienie (Róg)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'horn') {
             let bestRow = null;
@@ -1986,13 +2492,10 @@ function aiPlayBestCard() {
         }
     }
 
-    // 4. Bezpieczna Pożoga (używa TYLKO gdy nie niszczy własnych lub niszczy więcej u gracza)
     for (let i = 0; i < hand.length; i++) {
         if (hand[i].effect === 'scorch') {
             let playerMax = getMaxNonGoldPower('player');
             let aiMax = getMaxNonGoldPower('ai');
-            
-            // Jeśli gracz ma najwyższą moc i wynosi ona min. 6 pkt, a AI nie traci swojej najwyższej karty
             if (playerMax > aiMax && playerMax >= 6) {
                 chosenIndex = i;
                 break;
@@ -2000,7 +2503,6 @@ function aiPlayBestCard() {
         }
     }
 
-    // 5. Bezpieczna Pogoda (zagrywa tylko wtedy, gdy gracz straci więcej niż AI)
     if (chosenIndex === -1) {
         for (let i = 0; i < hand.length; i++) {
             let card = hand[i];
@@ -2020,8 +2522,6 @@ function aiPlayBestCard() {
                     if (!gameState.weather[targetRow] && targetRow !== gameState.disabledRow) {
                         let playerLoss = calcPotentialWeatherLoss('player', targetRow);
                         let aiLoss = calcPotentialWeatherLoss('ai', targetRow);
-
-                        // AI zagra pogodę tylko jeśli gracz straci wyraźnie więcej punktów niż AI
                         if (playerLoss > aiLoss && playerLoss >= 5) {
                             chosenIndex = i;
                             break;
@@ -2032,7 +2532,6 @@ function aiPlayBestCard() {
         }
     }
 
-    // 6. Wybór standardowej jednostki
     if (chosenIndex === -1) {
         let unitIndices = [];
         for (let i = 0; i < hand.length; i++) {
@@ -2049,9 +2548,6 @@ function aiPlayBestCard() {
             }
         }
 
-        // Świadomość AI dotycząca Tępicieli (efekt resilience marnuje się w ostatniej rundzie):
-        // W rundzie nie-ostatniej zachęcamy do zagrania Tępicieli (podwyższamy ocenę priorytetu).
-        // W ostatniej rundzie odkładamy Tępicieli na koniec (chyba że są potrzebni do przebicia punktowego).
         if (unitIndices.length > 1) {
             unitIndices.sort((a, b) => {
                 let cardA = hand[a];
@@ -2071,10 +2567,9 @@ function aiPlayBestCard() {
             });
         }
 
-        // Jeśli z braku wyboru zostały same niedopasowane specjały / pogody w ostatniej rundzie, użyj najmniej szkodliwej z nich
         if (unitIndices.length === 0) {
             for (let i = 0; i < hand.length; i++) {
-                if (hand[i].effect !== 'scorch') { // unika samobójczej pożogi
+                if (hand[i].effect !== 'scorch') {
                     chosenIndex = i;
                     break;
                 }
@@ -2269,7 +2764,6 @@ function resolveRound() {
                 return false;
             });
         });
-        // Resetowanie Rogów Dowódcy (Wzmocnienia) po zakończeniu rundy!
         gameState[pType].horns = { melee: false, range: false, siege: false };
     });
 
@@ -2343,6 +2837,19 @@ function redawForBossRound4() {
 }
 
 function handleVictoryRewards() {
+    if (currentCampaignLevelMatch === null) {
+        let f = gameState.player.faction;
+        if (playerProfile.questWins[f] !== undefined) {
+            if (playerProfile.questWins[f] < 5) {
+                playerProfile.questWins[f]++;
+                if (playerProfile.questWins[f] >= 5) {
+                    let leaderName = f === 'NR' ? 'Dziadkatus' : 'Koszmar czopa';
+                    setStatus(`WYGRANA! Ukończono quest! Możesz odebrać dowódcę: ${leaderName}! 👑`);
+                }
+            }
+        }
+    }
+
     if (currentCampaignLevelMatch !== null) {
         let lvl = currentCampaignLevelMatch;
         let isFirstTime = !playerProfile.campaignProgress.claimedRewards.includes(lvl);
@@ -2380,7 +2887,11 @@ function handleVictoryRewards() {
     } else {
         playerProfile.gold += 10;
         saveProgress();
-        setStatus("WYGRANA! Otrzymujesz +10 Złota! 🪙");
+        if (playerProfile.questWins[gameState.player.faction] < 5) {
+            // Standardowa wygrana
+        } else {
+            setStatus("WYGRANA! Otrzymujesz +10 Złota! 🪙");
+        }
     }
 }
 
