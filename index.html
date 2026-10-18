@@ -867,9 +867,9 @@ function loadProgress() {
         }
         if(!playerProfile.questClaimed) {
             playerProfile.questClaimed = { NR: false, MO: false };
-        if(!playerProfile.cheatsUsed) { // <--- DODANE
-            playerProfile.cheatsUsed = { gold: false, ork: false };
         }
+        if(!playerProfile.cheatsUsed) {
+            playerProfile.cheatsUsed = { gold: false, ork: false };
         }
         ['sp_decoy', 'sp_scorch'].forEach(specialId => {
             if (!playerProfile.unlockedCards.includes(specialId)) {
@@ -1134,6 +1134,9 @@ const LEGEND_DEFINITIONS = [
 ];
 
 function openCheatModal() {
+    if (!playerProfile.cheatsUsed) {
+        playerProfile.cheatsUsed = { gold: false, ork: false };
+    }
     updateCheatButtonsUI();
     document.getElementById('cheat-modal').classList.add('active');
 }
@@ -1164,6 +1167,7 @@ function updateCheatButtonsUI() {
 }
 
 function cheatAddGold() {
+    if (!playerProfile.cheatsUsed) playerProfile.cheatsUsed = { gold: false, ork: false };
     if (playerProfile.cheatsUsed.gold) return;
 
     playerProfile.gold += 100;
@@ -1174,6 +1178,7 @@ function cheatAddGold() {
 }
 
 function cheatEliminateOrk() {
+    if (!playerProfile.cheatsUsed) playerProfile.cheatsUsed = { gold: false, ork: false };
     if (playerProfile.cheatsUsed.ork) return;
 
     // Odblokowanie wszystkich 5 poziomów i oznaczenie nagród jako odebrane
