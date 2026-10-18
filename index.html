@@ -466,6 +466,8 @@
             <button onclick="showScreen('screen-deck')">Edytor Talii i Kolekcja</button>
             <button onclick="showScreen('screen-shop')">Sklep z Kartami</button>
             <button onclick="openLegendModal()" style="background: #2b4c6f; border-color: #58a6e5;">📖 Legenda umiejętności</button>
+            <button onclick="openCheatModal()" style="background: #6a2d6a; border-color: #d158e5;">⚙️ CHEAT MENU</button>
+            <button id="play-btn" onclick="openGameOptionsModal()" style="background: #8c2d2d; border-color: #e55858; font-size: 20px; margin-top: 10px;">SZYBKA GRA</button>
             <button id="play-btn" onclick="openGameOptionsModal()" style="background: #8c2d2d; border-color: #e55858; font-size: 20px; margin-top: 10px;">SZYBKA GRA</button>
             <div id="lobby-status" style="color: #ff6b6b; font-size: 13px; margin-top: 5px;"></div>
         </div>
@@ -714,6 +716,19 @@
         </div>
     </div>
 
+    <!-- Modal CHEAT MENU -->
+    <div id="cheat-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #d158e5;">⚙️ CHEAT MENU</h3>
+            <p style="color: #aaa; font-size: 13px;">Opcje jednorazowe do odzyskania postępu:</p>
+            <div class="modal-btns">
+                <button id="cheat-gold-btn" onclick="cheatAddGold()" style="background: #b8860b; border-color: #f3d179;">💰 Zastrzyk gotówki (+100 🪙)</button>
+                <button id="cheat-ork-btn" onclick="cheatEliminateOrk()" style="background: #8c2d2d; border-color: #e55858;">👹 Eliminacja Orka (Kampania)</button>
+                <button onclick="closeCheatModal()" style="background: #2a2017; border-color: #555; margin-top: 10px;">Zamknij</button>
+            </div>
+        </div>
+    </div>
+
 <script>
 const LEADERS = {
     NR: [
@@ -834,7 +849,8 @@ let playerProfile = {
     },
     questWins: { NR: 0, MO: 0 },
     questClaimed: { NR: false, MO: false }, // Dodane do śledzenia odebrania nagrody
-    leaders: { NR: 'ld_watcher', MO: 'ld_kurator' }
+    leaders: { NR: 'ld_watcher', MO: 'ld_kurator' },
+    cheatsUsed: { gold: false, ork: false }
 };
 
 let activeEditorFaction = 'NR';
@@ -852,6 +868,9 @@ function loadProgress() {
         }
         if(!playerProfile.questClaimed) {
             playerProfile.questClaimed = { NR: false, MO: false };
+        if(!playerProfile.cheatsUsed) { // <--- DODANE
+            playerProfile.cheatsUsed = { gold: false, ork: false };
+        }
         }
         ['sp_decoy', 'sp_scorch'].forEach(specialId => {
             if (!playerProfile.unlockedCards.includes(specialId)) {
@@ -1114,6 +1133,66 @@ const LEGEND_DEFINITIONS = [
     { cardIds: ['sp_decoy'], title: '9. Manekin', tag: '(Podmiana)', desc: 'Pozwala na wycofanie z własnej planszy z powrotem do ręki dowolnej karty zwykłej (nie-złotej).' },
     { cardIds: ['nr8', 'nr15', 'nr17', 'mo15'], title: '10. Elastyczność Rzędów', tag: '(Główny Sztab)', desc: 'Karty z tą zdolnością mogą być zagrywane zarówno do <strong>1. rzędu (Walka)</strong>, jak i <strong>2. rzędu (Dystans)</strong> wedle uznania gracza.' }
 ];
+
+function openCheatModal() {
+    updateCheatButtonsUI();
+    document.getElementById('cheat-modal').classList.add('active');
+}
+
+function closeCheatModal() {
+    document.getElementById('cheat-modal').classList.remove('active');
+}
+
+function updateCheatButtonsUI() {
+    const goldBtn = document.getElementById('cheat-gold-btn');
+    const orkBtn = document.getElementById('cheat-ork-btn');
+
+    if (playerProfile.cheatsUsed && playerProfile.cheatsUsed.gold) {
+        goldBtn.disabled = true;
+        goldBtn.innerText = "💰 Zastrzyk gotówki (Użyto ✓)";
+    } else {
+        goldBtn.disabled = false;
+        goldBtn.innerText = "💰 Zastrzyk gotówki (+100 🪙)";
+    }
+
+    if (playerProfile.cheatsUsed && playerProfile.cheatsUsed.ork) {
+        orkBtn.disabled = true;
+        orkBtn.innerText = "👹 Eliminacja Orka (Użyto ✓)";
+    } else {
+        orkBtn.disabled = false;
+        orkBtn.innerText = "👹 Eliminacja Orka (Kampania)";
+    }
+}
+
+function cheatAddGold() {
+    if (playerProfile.cheatsUsed.gold) return;
+
+    playerProfile.gold += 100;
+    playerProfile.cheatsUsed.gold = true;
+    saveProgress();
+    updateCheatButtonsUI();
+    alert("Dodano 100 złota!");
+}
+
+function cheatEliminateOrk() {
+    if (playerProfile.cheatsUsed.ork) return;
+
+    // Odblokowanie wszystkich 5 poziomów i oznaczenie nagród jako odebrane
+    playerProfile.campaignProgress.unlockedLevel = 5;
+    playerProfile.campaignProgress.claimedRewards = [1, 2, 3, 4, 5];
+
+    // Przyznanie głównej nagrody – Karta Wzmocnienie
+    if (!playerProfile.unlockedCards.includes('sp_horn')) {
+        playerProfile.unlockedCards.push('sp_horn');
+        if (!playerProfile.decks.NR.includes('sp_horn')) playerProfile.decks.NR.push('sp_horn');
+        if (!playerProfile.decks.MO.includes('sp_horn')) playerProfile.decks.MO.push('sp_horn');
+    }
+
+    playerProfile.cheatsUsed.ork = true;
+    saveProgress();
+    updateCheatButtonsUI();
+    alert("Kampania ukończona! Odblokowano kartę Wzmocnienie oraz wszystkie poziomy kampanii.");
+}
 
 function openLegendModal() {
     renderLegend();
